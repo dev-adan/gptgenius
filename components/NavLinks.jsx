@@ -2,9 +2,9 @@ import React from 'react'
 import Link from 'next/link';
 const links = [
     { href: '/chat', label: 'chat' },
-    // { href: '/tours', label: 'tours' },
-    // { href: '/tours/new-tour', label: 'new tour' },
-    // { href: '/profile', label: 'profile' },
+    { href: '/tours', label: 'tours' },
+    { href: '/tours/new-tour', label: 'new tour' },
+    { href: '/profile', label: 'profile' },
   ];
   
 const NavLinks = () => {
