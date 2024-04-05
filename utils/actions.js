@@ -1,5 +1,6 @@
 "use server";
 import OpenAI from "openai";
+import prisma from './db'
 
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
@@ -21,8 +22,15 @@ export const generateChatResponse = async (chatMessages) => {
 };
 
 export const getExistingTour = async ({ city, country }) => {
-  return null;
-};
+    return prisma.tour.findUnique({
+      where: {
+        city_country: {
+          city,
+          country,
+        },
+      },
+    });
+  };
 
 export const generateTourResponse = async ({ city, country }) => {
   const query = `Find a exact ${city} in this exact ${country}.
@@ -60,5 +68,43 @@ export const generateTourResponse = async ({ city, country }) => {
 };
 
 export const createNewTour = async (tour) => {
-  return null;
+    return prisma.tour.create({
+        data : tour,
+    })
+
 };
+
+
+export const getAllTours = async (searchTerm) => {
+    
+    if (!searchTerm) {
+      const tours = await prisma.tour.findMany({
+        orderBy: {
+          city: 'asc',
+        },
+      });
+  
+      return tours;
+    }
+  
+    const tours = await prisma.tour.findMany({
+      where: {
+        OR: [
+          {
+            city: {
+              contains: searchTerm,
+            },
+          },
+          {
+            country: {
+              contains: searchTerm,
+            },
+          },
+        ],
+      },
+      orderBy: {
+        city: 'asc',
+      },
+    });
+    return tours;
+  };
